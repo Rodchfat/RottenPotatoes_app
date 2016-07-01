@@ -3,15 +3,29 @@ helper_method :sort_column, :sort_direction
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
   end
-
+  #this method for the rating form
+  # def self.all_ratings
+  #   @all_ratings = ['G','PG','PG-13','R']
+  # end
+  
   def show
     id = params[:id] # retrieve movie ID from URI route
     @movie = Movie.find(id) # look up movie by unique ID
     # will render app/views/movies/show.<extension> by default
   end
-
+RATINGS = ['G','PG','PG-13','R']
   def index
-     @movies = Movie.order(sort_column + ' ' + sort_direction)
+    # Get ordered list of movies
+    @movies = Movie.order(sort_column + ' ' + sort_direction)
+    if !params[:ratings].nil?
+      @movies = @movies.where(:rating => (params[:ratings]).keys)
+    end
+     # params[:ratings] -> {'G' => 1, 'PG' => 1}
+     # params[:ratings].keys -> ['G', 'PG']
+    # @movies = Movie.
+    #   order(sort_column + ' ' + sort_direction).
+    #   where(:rating => (params[:ratings]).keys)
+     @all_ratings = Movie.all_ratings
   end
 
   def new
